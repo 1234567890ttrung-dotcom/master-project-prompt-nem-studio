@@ -1,0 +1,248 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactCTA from '../components/ui/ContactCTA.astro';
+
+const services = [
+  {
+    id: 'portrait',
+    name: 'Portrait Photography',
+    category: 'Portrait',
+    description: 'Intimate, considered portrait sessions designed to reveal character. We work in both natural light and studio environments to create portraits that feel authentic — not posed.',
+    details: ['Individual sessions', 'Family portraits', 'Personal branding portraits', 'Studio or on-location'],
+    image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=700&q=85&auto=format&fit=crop',
+  },
+  {
+    id: 'beauty',
+    name: 'Beauty Photography',
+    category: 'Beauty',
+    description: 'Editorial beauty photography emphasizing texture, light and craftsmanship. Ideal for makeup artists, beauty brands, and individuals seeking striking beauty imagery.',
+    details: ['Makeup artist collaborations', 'Skincare and cosmetics', 'Editorial beauty campaigns', 'Model portfolio beauty'],
+    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=700&q=85&auto=format&fit=crop',
+  },
+  {
+    id: 'couple',
+    name: 'Couple Photography',
+    category: 'Couple',
+    description: 'Documentary-approach couple sessions that prioritize genuine connection over directed poses. Outdoor and indoor sessions, available for engagements, anniversaries and personal occasions.',
+    details: ['Pre-wedding sessions', 'Anniversary celebrations', 'Engagement photographs', 'Outdoor and indoor'],
+    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=700&q=85&auto=format&fit=crop',
+  },
+  {
+    id: 'graduation',
+    name: 'Graduation Photography',
+    category: 'Graduation',
+    description: 'Celebratory and dignified graduation portraits designed to honor the moment and the person. A relaxed, personal session resulting in images to treasure.',
+    details: ['Individual graduate sessions', 'Group graduation portraits', 'On-campus or studio', 'Ceremony coverage'],
+    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=700&q=85&auto=format&fit=crop',
+  },
+  {
+    id: 'editorial',
+    name: 'Editorial Photography',
+    category: 'Editorial',
+    description: 'Creative editorial work for publications, brands and personal projects. Strong art direction, intentional light and a clear visual language in every frame.',
+    details: ['Magazine editorial', 'Brand campaigns', 'Fashion editorial', 'Creative projects'],
+    image: 'https://images.unsplash.com/photo-1488161628813-04466f872be2?w=700&q=85&auto=format&fit=crop',
+  },
+  {
+    id: 'profile',
+    name: 'Profile & Birthday',
+    category: 'Profile',
+    description: 'Professional profile portraits and birthday photography sessions designed to capture your best self with warmth and confidence. Clean, timeless results.',
+    details: ['LinkedIn / professional profiles', 'Social media portraits', 'Birthday portrait sessions', 'Fast turnaround available'],
+    image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=700&q=85&auto=format&fit=crop',
+  },
+];
+---
+
+<BaseLayout
+  title="Services"
+  description="Photography services by NEM STUDIO — portrait, beauty, couple, graduation, editorial, profile and birthday photography."
+>
+  <div class="services-page">
+
+    <!-- Header -->
+    <header class="services-header section--sm">
+      <div class="container">
+        <p class="label reveal">Photography Services</p>
+        <h1 class="services-title reveal">
+          What we offer.
+        </h1>
+        <p class="services-intro reveal">
+          Each service is designed around the person, the story, and the light. We do not offer packages in the traditional sense — every session is approached with fresh eyes.
+        </p>
+      </div>
+    </header>
+
+    <!-- Services List -->
+    <section class="services-list" aria-label="Photography services">
+      <div class="container">
+        {services.map((service, i) => (
+          <article
+            class:list={['service-item', { 'service-item--reversed': i % 2 !== 0 }]}
+            id={service.id}
+          >
+            <div class="service-image-wrap reveal">
+              <img
+                src={service.image}
+                alt={`${service.name} — NEM STUDIO`}
+                loading="lazy"
+                decoding="async"
+                class="service-img"
+              />
+            </div>
+            <div class="service-text">
+              <span class="label service-cat reveal">{service.category}</span>
+              <h2 class="service-name reveal">{service.name}</h2>
+              <p class="service-desc reveal">{service.description}</p>
+              <ul class="service-details reveal" aria-label="Service includes">
+                {service.details.map((d) => (
+                  <li class="service-detail-item">{d}</li>
+                ))}
+              </ul>
+              <a href="/contact" class="btn btn--outline reveal" style="margin-top:var(--space-4)">Enquire</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Note on pricing -->
+    <section class="services-note" aria-label="Pricing information">
+      <div class="container">
+        <div class="note-inner">
+          <h2 class="note-title reveal">Pricing & Availability</h2>
+          <p class="note-body reveal">
+            Pricing for each session is provided upon enquiry, tailored to the scope and requirements of your project. Contact us to discuss your vision and receive a personalised quote.
+          </p>
+          <p class="note-body reveal">
+            We do not list prices publicly because no two sessions are identical. We prefer an honest conversation about your needs before discussing investment.
+          </p>
+          <a href="/contact" class="btn btn--primary reveal">Get in touch</a>
+        </div>
+      </div>
+    </section>
+
+    <ContactCTA variant="dark" title="Start a conversation." subtitle="Tell us about your project." />
+
+  </div>
+</BaseLayout>
+
+<style>
+  .services-header {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .services-title {
+    font-family: var(--font-heading);
+    font-size: var(--type-h1);
+    font-weight: 400;
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-4);
+    line-height: 1.05;
+  }
+
+  .services-intro {
+    color: var(--color-muted);
+    max-width: 65ch;
+    line-height: 1.8;
+  }
+
+  /* Services List */
+  .services-list { padding-block: var(--space-16); }
+
+  .service-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
+    padding-block: var(--space-12);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .service-item:first-child { padding-top: 0; }
+
+  .service-item--reversed .service-image-wrap { order: 2; }
+  .service-item--reversed .service-text      { order: 1; }
+
+  .service-img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    display: block;
+  }
+
+  .service-cat {
+    display: block;
+    color: var(--color-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .service-name {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: var(--space-4);
+  }
+
+  .service-desc {
+    color: var(--color-secondary);
+    line-height: 1.85;
+    margin-bottom: var(--space-4);
+  }
+
+  .service-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .service-detail-item {
+    font-size: var(--type-small);
+    color: var(--color-muted);
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .service-detail-item::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+  }
+
+  /* Note */
+  .services-note {
+    background-color: var(--color-surface);
+    padding-block: var(--space-12);
+  }
+
+  .note-inner { max-width: 680px; }
+
+  .note-title {
+    font-family: var(--font-heading);
+    font-size: var(--type-h3);
+    font-weight: 400;
+    margin-bottom: var(--space-4);
+  }
+
+  .note-body {
+    color: var(--color-secondary);
+    line-height: 1.85;
+    margin-bottom: var(--space-3);
+  }
+
+  /* Responsive */
+  @media (max-width: 1023px) {
+    .service-item {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+    .service-item--reversed .service-image-wrap { order: 0; }
+    .service-item--reversed .service-text      { order: 0; }
+    .service-img { aspect-ratio: 16 / 9; }
+  }
+</style>
