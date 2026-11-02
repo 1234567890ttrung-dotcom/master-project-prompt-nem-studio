@@ -1,0 +1,71 @@
+---
+import ProjectCard from '../portfolio/ProjectCard.astro';
+
+interface Project {
+  slug: string;
+  data: {
+    title: string;
+    category: string;
+    coverImage: string;
+    coverAlt: string;
+  };
+}
+
+interface Props {
+  projects: Project[];
+  currentSlug: string;
+}
+
+const { projects, currentSlug } = Astro.props;
+const related = projects.filter((p) => p.slug !== currentSlug).slice(0, 3);
+---
+
+{related.length > 0 && (
+  <section class="related-projects" aria-label="Related projects">
+    <div class="container">
+      <h2 class="related-heading label">More Work</h2>
+      <div class="related-grid">
+        {related.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            category={project.data.category}
+            slug={project.slug}
+            coverImage={project.data.coverImage}
+            coverAlt={project.data.coverAlt}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .related-projects {
+    padding-block: var(--space-12);
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-8);
+  }
+
+  .related-heading {
+    font-family: var(--font-body);
+    font-size: var(--type-label);
+    color: var(--color-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: var(--space-6);
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 767px) {
+    .related-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 479px) {
+    .related-grid { grid-template-columns: 1fr; }
+  }
+</style>
