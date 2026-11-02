@@ -1,0 +1,84 @@
+---
+// CategoryFilter — data-driven, no hardcoded per-category logic
+interface Props {
+  categories: string[];
+  active?: string;
+}
+
+const { categories, active = 'All' } = Astro.props;
+const allCats = ['All', ...categories];
+---
+
+<div class="category-filter" role="tablist" aria-label="Filter by category">
+  {allCats.map((cat) => (
+    <button
+      class:list={['filter-btn', { active: cat === active }]}
+      role="tab"
+      aria-selected={cat === active ? 'true' : 'false'}
+      data-category={cat}
+    >
+      {cat}
+    </button>
+  ))}
+</div>
+
+<style>
+  .category-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-bottom: var(--space-8);
+  }
+
+  .filter-btn {
+    font-family: var(--font-body);
+    font-size: var(--type-label);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--color-secondary);
+    color: var(--color-secondary);
+  }
+
+  .filter-btn.active {
+    background-color: var(--color-text);
+    border-color: var(--color-text);
+    color: var(--color-background);
+  }
+</style>
+
+<script>
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const grid = document.querySelector<HTMLElement>('.project-grid');
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const category = btn.dataset.category ?? 'All';
+
+      // Update button states
+      filterBtns.forEach((b) => {
+        b.classList.toggle('active', b === btn);
+        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+      });
+
+      // Filter cards
+      const cards = grid?.querySelectorAll<HTMLElement>('[data-category]');
+      cards?.forEach((card) => {
+        const match = category === 'All' || card.dataset.category === category;
+        card.style.display = match ? '' : 'none';
+        card.setAttribute('aria-hidden', match ? 'false' : 'true');
+      });
+    });
+  });
+</script>

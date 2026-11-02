@@ -1,0 +1,104 @@
+---
+import ProjectCard from './ProjectCard.astro';
+
+interface Project {
+  slug: string;
+  data: {
+    title: string;
+    category: string;
+    coverImage: string;
+    coverAlt: string;
+    featured?: boolean;
+    displayOrder?: number;
+  };
+}
+
+interface Props {
+  projects: Project[];
+  layout?: 'masonry' | 'grid' | 'editorial';
+}
+
+const { projects, layout = 'masonry' } = Astro.props;
+---
+
+<div class:list={['project-grid', `layout-${layout}`]} role="list">
+  {projects.map((project, i) => (
+    <div
+      class:list={['grid-item', `item-${(i % 6) + 1}`]}
+      data-category={project.data.category}
+      role="listitem"
+    >
+      <ProjectCard
+        title={project.data.title}
+        category={project.data.category}
+        slug={project.slug}
+        coverImage={project.data.coverImage}
+        coverAlt={project.data.coverAlt}
+        featured={project.data.featured}
+        variant={i % 4 === 0 ? 'large' : 'default'}
+      />
+    </div>
+  ))}
+</div>
+
+<style>
+  /* ─── Masonry Grid ── */
+  .layout-masonry {
+    columns: 3;
+    column-gap: var(--space-3);
+  }
+
+  .layout-masonry .grid-item {
+    break-inside: avoid;
+    margin-bottom: var(--space-3);
+  }
+
+  /* ─── Editorial Grid ── */
+  .layout-editorial {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  /* Alternating editorial spans */
+  .layout-editorial .item-1 { grid-column: span 7; }
+  .layout-editorial .item-2 { grid-column: span 5; }
+  .layout-editorial .item-3 { grid-column: span 4; }
+  .layout-editorial .item-4 { grid-column: span 8; }
+  .layout-editorial .item-5 { grid-column: span 6; }
+  .layout-editorial .item-6 { grid-column: span 6; }
+
+  /* ─── Standard Grid ── */
+  .layout-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 1023px) {
+    .layout-masonry { columns: 2; }
+    .layout-editorial { grid-template-columns: repeat(6, 1fr); }
+    .layout-editorial .item-1 { grid-column: span 4; }
+    .layout-editorial .item-2 { grid-column: span 2; }
+    .layout-editorial .item-3 { grid-column: span 3; }
+    .layout-editorial .item-4 { grid-column: span 3; }
+    .layout-editorial .item-5 { grid-column: span 3; }
+    .layout-editorial .item-6 { grid-column: span 3; }
+    .layout-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 639px) {
+    .layout-masonry { columns: 2; column-gap: var(--space-2); }
+    .layout-masonry .grid-item { margin-bottom: var(--space-2); }
+    .layout-editorial { grid-template-columns: 1fr 1fr; }
+    .layout-editorial [class*="item-"] { grid-column: span 2; }
+    .layout-editorial .item-1,
+    .layout-editorial .item-3,
+    .layout-editorial .item-5 { grid-column: span 1; }
+    .layout-editorial .item-2,
+    .layout-editorial .item-4,
+    .layout-editorial .item-6 { grid-column: span 1; }
+    .layout-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-2); }
+  }
+</style>

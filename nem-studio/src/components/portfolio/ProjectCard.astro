@@ -1,0 +1,131 @@
+---
+// ProjectCard — used in grid, featured sections, related projects
+interface Props {
+  title: string;
+  category: string;
+  slug: string;
+  coverImage: string;
+  coverAlt: string;
+  featured?: boolean;
+  variant?: 'default' | 'large' | 'horizontal';
+}
+
+const { title, category, slug, coverImage, coverAlt, featured = false, variant = 'default' } = Astro.props;
+---
+
+<article class:list={['project-card', `variant-${variant}`, { featured }]}>
+  <a href={`/portfolio/${slug}`} class="card-link" aria-label={`View project: ${title}`}>
+    <div class="card-image-wrap">
+      <img
+        src={coverImage}
+        alt={coverAlt}
+        class="card-image"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="card-overlay" aria-hidden="true">
+        <span class="overlay-label">View Project</span>
+      </div>
+    </div>
+    <div class="card-meta">
+      <span class="card-category label">{category}</span>
+      <h3 class="card-title">{title}</h3>
+    </div>
+  </a>
+</article>
+
+<style>
+  .project-card {
+    --card-radius: var(--radius-sm);
+  }
+
+  .card-link {
+    display: block;
+    color: inherit;
+  }
+
+  .card-image-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--card-radius);
+    background-color: var(--color-surface);
+  }
+
+  /* Default: portrait aspect */
+  .variant-default .card-image-wrap { aspect-ratio: 3 / 4; }
+  .variant-large .card-image-wrap   { aspect-ratio: 2 / 3; }
+  .variant-horizontal .card-image-wrap { aspect-ratio: 4 / 3; }
+
+  .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 500ms var(--ease-out);
+    display: block;
+  }
+
+  .card-link:hover .card-image {
+    transform: scale(1.04);
+  }
+
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(37, 35, 31, 0);
+    display: flex;
+    align-items: flex-end;
+    padding: var(--space-3);
+    transition: background-color var(--transition-base);
+  }
+
+  .overlay-label {
+    font-family: var(--font-body);
+    font-size: var(--type-label);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-background);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity var(--transition-base), transform var(--transition-base);
+  }
+
+  .card-link:hover .card-overlay {
+    background-color: rgba(37, 35, 31, 0.35);
+  }
+
+  .card-link:hover .overlay-label {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card-meta {
+    padding-top: var(--space-2);
+  }
+
+  .card-category {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--color-muted);
+  }
+
+  .card-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.125rem, 1.8vw, 1.375rem);
+    font-weight: 400;
+    color: var(--color-text);
+    line-height: 1.2;
+    transition: color var(--transition-fast);
+  }
+
+  .card-link:hover .card-title {
+    color: var(--color-secondary);
+  }
+
+  /* Placeholder state */
+  .card-image-wrap:empty,
+  .card-image[src=""] {
+    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
+  }
+</style>
