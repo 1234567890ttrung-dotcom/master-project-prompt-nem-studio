@@ -1,16 +1,401 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import ProjectCard from '../components/portfolio/ProjectCard.astro';
+import ContactCTA from '../components/ui/ContactCTA.astro';
+import { siteConfig } from '../lib/config';
+
+const allProjects = await getCollection('projects', ({ data }) => data.published);
+const featured = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => (a.data.displayOrder ?? 99) - (b.data.displayOrder ?? 99))
+  .slice(0, 6);
+
+const categories = siteConfig.categories;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="NEM STUDIO" description={siteConfig.description}>
+
+  <!-- ─── Hero ─────────────────────────────── -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero-inner container">
+      <div class="hero-content">
+        <p class="hero-label label reveal">Photography Studio</p>
+        <h1 class="hero-title reveal">
+          <span class="hero-title-main">Beyond</span>
+          <span class="hero-title-em">the frame.</span>
+        </h1>
+        <p class="hero-sub reveal">Every image holds a story.</p>
+        <a href="/portfolio" class="btn btn--primary reveal">Explore Portfolio</a>
+      </div>
+      <div class="hero-image-wrap reveal">
+        <div class="hero-image-grid">
+          <div class="hero-img hero-img--large" style="background-image:url('https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=900&q=85&auto=format&fit=crop')"></div>
+          <div class="hero-img hero-img--small" style="background-image:url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=500&q=80&auto=format&fit=crop')"></div>
+        </div>
+        <div class="hero-float-tag" aria-hidden="true">
+          <span class="label">Light · Perspective · Emotion</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll" aria-hidden="true">
+      <span class="label">Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ─── Selected Works ───────────────────── -->
+  <section class="section selected-works" aria-labelledby="works-heading">
+    <div class="container">
+      <div class="works-header">
+        <div>
+          <p class="label reveal">Selected Works</p>
+          <h2 id="works-heading" class="works-title reveal">Recent Projects</h2>
+        </div>
+        <a href="/portfolio" class="btn btn--ghost reveal">View all work</a>
+      </div>
+
+      <div class="works-grid">
+        {featured.map((project, i) => (
+          <div class:list={['works-item', `works-item--${i + 1}`]}>
+            <ProjectCard
+              title={project.data.title}
+              category={project.data.category}
+              slug={project.slug}
+              coverImage={project.data.coverImage}
+              coverAlt={project.data.coverAlt}
+              featured={project.data.featured}
+              variant={i === 0 ? 'large' : 'default'}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Brand Intro ──────────────────────── -->
+  <section class="section brand-intro" aria-labelledby="brand-heading">
+    <div class="container">
+      <div class="brand-inner">
+        <div class="brand-visual reveal">
+          <div class="brand-img" style="background-image:url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=700&q=85&auto=format&fit=crop')"></div>
+          <div class="brand-accent-block" aria-hidden="true"></div>
+        </div>
+        <div class="brand-text">
+          <p class="label reveal">About the Studio</p>
+          <h2 id="brand-heading" class="brand-heading reveal">A studio built around the art of seeing.</h2>
+          <p class="brand-body reveal">
+            NEM STUDIO is a photography studio exploring light, perspective and emotion through carefully crafted visual stories. We believe every session is an opportunity to reveal something genuine — a quality of light, a fleeting expression, a composition that outlasts the moment itself.
+          </p>
+          <p class="brand-body reveal">
+            Our approach is unhurried and collaborative. We work closely with each subject to create images that feel true — not performed.
+          </p>
+          <a href="/about" class="btn btn--ghost reveal">Learn more</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Categories ───────────────────────── -->
+  <section class="section categories-section" aria-labelledby="cat-heading">
+    <div class="container">
+      <p class="label reveal" style="text-align:center">What we photograph</p>
+      <h2 id="cat-heading" class="cat-heading reveal">Photography Services</h2>
+      <div class="cat-grid" role="list">
+        {categories.map((cat, i) => (
+          <a
+            href={`/portfolio?category=${cat}`}
+            class="cat-card reveal"
+            role="listitem"
+          >
+            <span class="cat-name">{cat}</span>
+            <span class="cat-arrow" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Philosophy ───────────────────────── -->
+  <section class="section philosophy-section" aria-labelledby="phil-heading">
+    <div class="container">
+      <p class="label reveal" style="text-align:center">Our Approach</p>
+      <h2 id="phil-heading" class="phil-heading reveal">Visual Philosophy</h2>
+      <div class="phil-grid">
+        {[
+          { word: 'Light', desc: 'The relationship between light, shadow and visual atmosphere. We study how illumination transforms a scene — from the direction of a window to the quality of open shade.' },
+          { word: 'Perspective', desc: 'Composition, visual language and creative interpretation. Every frame is a deliberate choice: angle, distance, proportion — each element working in service of the image.' },
+          { word: 'Emotion', desc: 'Human expression, connection and storytelling. We are drawn to the honest, the quiet, the unguarded — moments that reveal something real about the person in front of the lens.' },
+        ].map((p, i) => (
+          <div class="phil-item reveal">
+            <div class="phil-number label" aria-hidden="true">0{i + 1}</div>
+            <h3 class="phil-word">{p.word}</h3>
+            <p class="phil-desc">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Closing ───────────────────────────── -->
+  <section class="closing-section" aria-label="Closing invitation">
+    <div class="closing-image" style="background-image:url('https://images.unsplash.com/photo-1488161628813-04466f872be2?w=1800&q=80&auto=format&fit=crop')" role="img" aria-label="Studio portrait"></div>
+    <div class="closing-overlay">
+      <div class="container">
+        <div class="closing-content">
+          <p class="label closing-label">NEM STUDIO</p>
+          <h2 class="closing-headline">Every image holds a story.</h2>
+          <p class="closing-sub">Let us help you tell yours.</p>
+          <div class="closing-btns">
+            <a href="/portfolio" class="btn btn--outline closing-btn-light">View Portfolio</a>
+            <a href="/contact" class="btn btn--primary">Get in Touch</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .hero {
+    min-height: calc(100svh - var(--header-height));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: var(--space-12) var(--space-8);
+    position: relative;
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  .hero-label { color: var(--color-accent); margin-bottom: var(--space-3); }
+
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: var(--type-display);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+  }
+
+  .hero-title-main { display: block; }
+  .hero-title-em { display: block; font-style: italic; color: var(--color-secondary); }
+
+  .hero-sub {
+    font-family: var(--font-heading);
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-style: italic;
+    color: var(--color-muted);
+    margin-bottom: var(--space-6);
+  }
+
+  .hero-image-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-2);
+    height: 540px;
+  }
+
+  .hero-img {
+    background-size: cover;
+    background-position: center;
+    border-radius: var(--radius-sm);
+  }
+
+  .hero-img--small { align-self: end; height: 55%; }
+
+  .hero-float-tag {
+    margin-top: var(--space-2);
+    text-align: right;
+    color: var(--color-muted);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: var(--space-6);
+    left: var(--gutter);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-muted);
+    font-size: var(--type-label);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .scroll-line { width: 48px; height: 1px; background-color: var(--color-accent); }
+
+  /* Works */
+  .works-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: var(--space-8);
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .works-title {
+    font-family: var(--font-heading);
+    font-size: var(--type-h2);
+    font-weight: 400;
+    margin-top: var(--space-1);
+  }
+
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  .works-item--1 { grid-column: span 7; }
+  .works-item--2 { grid-column: span 5; }
+  .works-item--3 { grid-column: span 4; }
+  .works-item--4 { grid-column: span 8; }
+  .works-item--5 { grid-column: span 6; }
+  .works-item--6 { grid-column: span 6; }
+
+  /* Brand Intro */
+  .brand-intro { background-color: var(--color-surface); padding-block: var(--space-16); }
+
+  .brand-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  .brand-visual { position: relative; }
+
+  .brand-img {
+    aspect-ratio: 3 / 4;
+    background-size: cover;
+    background-position: center;
+    border-radius: var(--radius-sm);
+  }
+
+  .brand-accent-block {
+    position: absolute;
+    bottom: -1.5rem;
+    right: -1.5rem;
+    width: 40%;
+    height: 40%;
+    background-color: var(--color-accent);
+    opacity: 0.25;
+    border-radius: var(--radius-sm);
+    z-index: -1;
+  }
+
+  .brand-heading {
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: var(--space-4);
+    margin-top: var(--space-2);
+  }
+
+  .brand-body { color: var(--color-secondary); margin-bottom: var(--space-3); line-height: 1.8; }
+
+  /* Categories */
+  .cat-heading {
+    font-family: var(--font-heading);
+    font-size: var(--type-h2);
+    text-align: center;
+    margin-bottom: var(--space-8);
+    margin-top: var(--space-1);
+  }
+
+  .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+
+  .cat-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+  }
+
+  .cat-card:hover { border-color: var(--color-text); background-color: var(--color-text); }
+
+  .cat-name { font-family: var(--font-heading); font-size: 1.25rem; color: var(--color-text); transition: color var(--transition-fast); }
+  .cat-arrow { color: var(--color-muted); transition: all var(--transition-fast); }
+  .cat-card:hover .cat-name, .cat-card:hover .cat-arrow { color: var(--color-background); }
+
+  /* Philosophy */
+  .philosophy-section { background-color: var(--color-surface); padding-block: var(--space-16); }
+
+  .phil-heading {
+    font-family: var(--font-heading);
+    font-size: var(--type-h2);
+    text-align: center;
+    margin-bottom: var(--space-12);
+    margin-top: var(--space-1);
+  }
+
+  .phil-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-8); }
+
+  .phil-item { padding-top: var(--space-4); border-top: 1px solid var(--color-border); }
+  .phil-number { display: block; margin-bottom: var(--space-2); color: var(--color-accent); }
+  .phil-word { font-family: var(--font-heading); font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 400; margin-bottom: var(--space-3); }
+  .phil-desc { color: var(--color-secondary); line-height: 1.8; font-size: 0.9375rem; }
+
+  /* Closing */
+  .closing-section { position: relative; height: 85vh; min-height: 500px; margin-top: var(--space-16); }
+
+  .closing-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+  }
+
+  .closing-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(37,35,31,0.85) 0%, rgba(37,35,31,0.4) 60%, rgba(37,35,31,0.1) 100%);
+    display: flex;
+    align-items: center;
+  }
+
+  .closing-content { max-width: 600px; }
+  .closing-label { color: var(--color-accent); margin-bottom: var(--space-3); }
+  .closing-headline { font-family: var(--font-heading); font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; font-style: italic; color: var(--color-background); line-height: 1.1; margin-bottom: var(--space-3); }
+  .closing-sub { color: rgba(247,246,242,0.7); font-size: 1.125rem; margin-bottom: var(--space-6); }
+  .closing-btns { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .closing-btn-light { border-color: rgba(247,246,242,0.4); color: var(--color-background); }
+  .closing-btn-light:hover { border-color: var(--color-background); }
+
+  /* Responsive */
+  @media (max-width: 1023px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-image-wrap { display: none; }
+    .hero { min-height: auto; padding-block: var(--space-16) var(--space-12); }
+    .works-grid { grid-template-columns: 1fr 1fr; }
+    .works-item--1,.works-item--2,.works-item--3,
+    .works-item--4,.works-item--5,.works-item--6 { grid-column: span 1; }
+    .brand-inner { grid-template-columns: 1fr; }
+    .brand-visual { display: none; }
+    .phil-grid { grid-template-columns: 1fr 1fr; }
+    .cat-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 639px) {
+    .works-grid { grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+    .phil-grid { grid-template-columns: 1fr; }
+    .cat-grid { grid-template-columns: 1fr 1fr; }
+    .closing-image { background-attachment: scroll; }
+  }
+</style>
