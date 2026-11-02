@@ -1,0 +1,273 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactCTA from '../components/ui/ContactCTA.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="Learn about NEM STUDIO — a photography studio exploring light, perspective and emotion through carefully crafted visual stories."
+>
+  <div class="about-page">
+
+    <!-- Page Header -->
+    <header class="about-header section--sm">
+      <div class="container">
+        <p class="label reveal">About NEM STUDIO</p>
+        <h1 class="about-title reveal">
+          We photograph<br />
+          <em>with intention.</em>
+        </h1>
+      </div>
+    </header>
+
+    <!-- Brand Statement -->
+    <section class="about-statement" aria-label="Brand statement">
+      <div class="container">
+        <div class="statement-inner">
+          <div class="statement-image reveal">
+            <img
+              src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&q=85&auto=format&fit=crop"
+              alt="NEM STUDIO — editorial portrait"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="statement-text">
+            <blockquote class="statement-quote reveal">
+              "NEM STUDIO is a photography studio exploring light, perspective and emotion through carefully crafted visual stories."
+            </blockquote>
+            <p class="statement-body reveal">
+              Founded on the belief that a photograph should feel as considered as the moment it captures, NEM STUDIO works across portrait, beauty, couple, graduation and editorial photography.
+            </p>
+            <p class="statement-body reveal">
+              We are not interested in the fast, the formulaic, or the forgettable. We build images with patience — studying the light, listening to the subject, waiting for the frame that feels inevitable rather than manufactured.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Philosophy -->
+    <section class="about-philosophy section" aria-labelledby="phil-heading">
+      <div class="container">
+        <p class="label reveal" style="margin-bottom:var(--space-2)">Photography Philosophy</p>
+        <h2 id="phil-heading" class="about-section-title reveal">How we see.</h2>
+        <div class="phil-columns">
+          <div class="phil-col reveal">
+            <h3 class="phil-h">Light</h3>
+            <p>Light is the first material of photography. Before composition, before subject, before any technical decision — there is light. We study it constantly: its direction, its quality, its temperature, its relationship to shadow. Every session begins with reading the light.</p>
+          </div>
+          <div class="phil-col reveal">
+            <h3 class="phil-h">Perspective</h3>
+            <p>The position of the camera is a creative statement. Distance, angle, lens choice — each decision shapes the image's meaning. We resist the obvious and search for the frame that reveals rather than simply records.</p>
+          </div>
+          <div class="phil-col reveal">
+            <h3 class="phil-h">Emotion</h3>
+            <p>The most technically perfect photograph fails if it contains nothing of the human. We work to create conditions where genuine expression can surface — where the subject can forget the camera and simply be present.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Creative Approach -->
+    <section class="about-approach section" aria-labelledby="approach-heading">
+      <div class="container">
+        <div class="approach-inner">
+          <div class="approach-text">
+            <p class="label reveal">Creative Approach</p>
+            <h2 id="approach-heading" class="about-section-title reveal">The way we work.</h2>
+            <p class="approach-body reveal">
+              Each session is designed around the individual. Before any photograph is made, we invest time in conversation — understanding what the session means to the person in front of us, what they want to feel when they look at the final images.
+            </p>
+            <p class="approach-body reveal">
+              We keep environments calm and unhurried. We do not rush through a checklist of poses. We observe, we suggest, we adapt. The photographs that matter are rarely the ones planned in advance.
+            </p>
+            <p class="approach-body reveal">
+              Post-production is restrained. We edit with a light hand, preserving the authenticity of the moment rather than imposing a heavy stylistic treatment on top of it.
+            </p>
+          </div>
+          <div class="approach-images reveal">
+            <img
+              src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=85&auto=format&fit=crop"
+              alt="NEM STUDIO — photography approach"
+              loading="lazy"
+              decoding="async"
+              class="approach-img approach-img--main"
+            />
+            <img
+              src="https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&q=80&auto=format&fit=crop"
+              alt="NEM STUDIO — studio atmosphere"
+              loading="lazy"
+              decoding="async"
+              class="approach-img approach-img--accent"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team -->
+    <section class="about-team section" aria-labelledby="team-heading">
+      <div class="container">
+        <p class="label reveal" style="margin-bottom:var(--space-2)">The Studio</p>
+        <h2 id="team-heading" class="about-section-title reveal">Behind the lens.</h2>
+        <div class="team-note reveal">
+          <p>NEM STUDIO is a small, dedicated photography practice. The team works closely with every client — from initial inquiry through final delivery — ensuring a consistent, considered approach from beginning to end.</p>
+          <p style="margin-top:var(--space-3)"><em>Team introduction coming soon.</em></p>
+        </div>
+      </div>
+    </section>
+
+    <ContactCTA
+      title="Ready to begin?"
+      subtitle="Every story deserves to be told well."
+      ctaText="Contact the studio"
+      ctaHref="/contact"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  .about-header {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .about-title {
+    font-family: var(--font-heading);
+    font-size: var(--type-h1);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-top: var(--space-2);
+  }
+
+  .about-title em { color: var(--color-secondary); }
+
+  /* Statement */
+  .about-statement {
+    padding-block: var(--space-16);
+    background-color: var(--color-surface);
+  }
+
+  .statement-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  .statement-image img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+  }
+
+  .statement-quote {
+    font-family: var(--font-heading);
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-text);
+    line-height: 1.4;
+    margin-bottom: var(--space-6);
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--color-accent);
+  }
+
+  .statement-body {
+    color: var(--color-secondary);
+    line-height: 1.85;
+    margin-bottom: var(--space-3);
+  }
+
+  /* Philosophy */
+  .about-section-title {
+    font-family: var(--font-heading);
+    font-size: var(--type-h2);
+    font-weight: 400;
+    margin-bottom: var(--space-8);
+    margin-top: var(--space-1);
+  }
+
+  .phil-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-8);
+  }
+
+  .phil-col {
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .phil-h {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 400;
+    margin-bottom: var(--space-3);
+  }
+
+  .phil-col p { color: var(--color-secondary); line-height: 1.8; }
+
+  /* Approach */
+  .about-approach { background-color: var(--color-background); }
+
+  .approach-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  .approach-body { color: var(--color-secondary); line-height: 1.85; margin-bottom: var(--space-3); }
+
+  .approach-images {
+    position: relative;
+    height: 560px;
+  }
+
+  .approach-img {
+    position: absolute;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+  }
+
+  .approach-img--main {
+    width: 75%;
+    height: 80%;
+    top: 0;
+    right: 0;
+  }
+
+  .approach-img--accent {
+    width: 50%;
+    height: 45%;
+    bottom: 0;
+    left: 0;
+    border: 6px solid var(--color-background);
+  }
+
+  /* Team */
+  .about-team { background-color: var(--color-surface); }
+
+  .team-note {
+    max-width: 65ch;
+    color: var(--color-secondary);
+    line-height: 1.85;
+  }
+
+  /* Responsive */
+  @media (max-width: 1023px) {
+    .statement-inner,
+    .approach-inner { grid-template-columns: 1fr; }
+    .statement-image { display: none; }
+    .approach-images { display: none; }
+    .phil-columns { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 639px) {
+    .phil-columns { grid-template-columns: 1fr; }
+  }
+</style>
