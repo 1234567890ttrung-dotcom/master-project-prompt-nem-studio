@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import ProjectGrid from '../../components/portfolio/ProjectGrid.astro';
+import CategoryFilter from '../../components/portfolio/CategoryFilter.astro';
+import { siteConfig } from '../../lib/config';
+
+const allProjects = await getCollection('projects', ({ data }) => data.published);
+const sorted = allProjects.sort(
+  (a, b) => (a.data.displayOrder ?? 99) - (b.data.displayOrder ?? 99)
+);
+const categories = siteConfig.categories;
+---
+
+<BaseLayout
+  title="Portfolio"
+  description="Browse NEM STUDIO's photography portfolio — portrait, beauty, couple, graduation, editorial and more."
+>
+  <div class="portfolio-page">
+    <!-- Page Header -->
+    <div class="portfolio-header container">
+      <div class="ph-text">
+        <p class="label">NEM STUDIO</p>
+        <h1 class="ph-title">Portfolio</h1>
+        <p class="ph-sub">A curated selection of photographic work across portrait, beauty, couple and editorial photography.</p>
+      </div>
+      <div class="ph-count">
+        <span class="ph-count-number">{sorted.length}</span>
+        <span class="label">Projects</span>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Filter + Grid -->
+    <div class="portfolio-body container">
+      <CategoryFilter categories={[...categories]} />
+      <ProjectGrid projects={sorted} layout="masonry" />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .portfolio-page {
+    padding-top: var(--space-12);
+  }
+
+  .portfolio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+    flex-wrap: wrap;
+  }
+
+  .ph-text .label {
+    display: block;
+    margin-bottom: var(--space-2);
+    color: var(--color-muted);
+  }
+
+  .ph-title {
+    font-family: var(--font-heading);
+    font-size: var(--type-h1);
+    font-weight: 400;
+    line-height: 1.05;
+    margin-bottom: var(--space-3);
+  }
+
+  .ph-sub {
+    color: var(--color-muted);
+    max-width: 55ch;
+    font-size: var(--type-body);
+    line-height: 1.7;
+  }
+
+  .ph-count {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .ph-count-number {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    line-height: 1;
+    color: var(--color-text);
+    margin-bottom: 0.25rem;
+  }
+
+  .portfolio-body {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-16);
+  }
+
+  .divider { margin: 0; }
+
+  @media (max-width: 639px) {
+    .ph-count { display: none; }
+  }
+</style>
+
+<script>
+  // Handle category pre-selection from URL query param
+  const params = new URLSearchParams(window.location.search);
+  const categoryParam = params.get('category');
+  if (categoryParam) {
+    const btn = document.querySelector<HTMLButtonElement>(
+      `.filter-btn[data-category="${categoryParam}"]`
+    );
+    if (btn) btn.click();
+  }
+</script>

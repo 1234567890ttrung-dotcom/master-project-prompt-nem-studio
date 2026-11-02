@@ -1,0 +1,247 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import ProjectGallery from '../../components/project/ProjectGallery.astro';
+import RelatedProjects from '../../components/project/RelatedProjects.astro';
+import Lightbox from '../../components/ui/Lightbox.astro';
+import ContactCTA from '../../components/ui/ContactCTA.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => data.published);
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project, allProjects: projects },
+  }));
+}
+
+const { project, allProjects } = Astro.props;
+const { data } = project;
+const { Content } = await project.render();
+
+// Prev/next navigation
+const sorted = allProjects
+  .filter((p) => p.data.published)
+  .sort((a, b) => (a.data.displayOrder ?? 99) - (b.data.displayOrder ?? 99));
+const currentIndex = sorted.findIndex((p) => p.slug === project.slug);
+const prevProject = currentIndex > 0 ? sorted[currentIndex - 1] : null;
+const nextProject = currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : null;
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  image={data.coverImage}
+  type="article"
+>
+  <article class="project-detail">
+    <!-- Project Hero -->
+    <header class="project-hero">
+      <div class="ph-cover">
+        <img
+          src={data.coverImage}
+          alt={data.coverAlt}
+          class="cover-img"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
+      <div class="ph-info container">
+        <div class="ph-meta">
+          <span class="label ph-category">{data.category}</span>
+          <h1 class="ph-title">{data.title}</h1>
+          <p class="ph-description">{data.description}</p>
+        </div>
+        {data.credits && Object.values(data.credits).some(Boolean) && (
+          <div class="ph-credits">
+            <p class="label credits-label">Credits</p>
+            {data.credits.photographer && <p><span class="credit-role">Photography</span> {data.credits.photographer}</p>}
+            {data.credits.makeup && <p><span class="credit-role">Makeup</span> {data.credits.makeup}</p>}
+            {data.credits.stylist && <p><span class="credit-role">Styling</span> {data.credits.stylist}</p>}
+            {data.credits.model && <p><span class="credit-role">Model</span> {data.credits.model}</p>}
+            {data.credits.location && <p><span class="credit-role">Location</span> {data.credits.location}</p>}
+          </div>
+        )}
+      </div>
+    </header>
+
+    <!-- Gallery -->
+    <div class="container">
+      <ProjectGallery images={data.gallery} projectTitle={data.title} />
+
+      <!-- Optional prose from markdown body -->
+      <div class="project-body">
+        <Content />
+      </div>
+    </div>
+
+    <!-- Project Nav -->
+    <nav class="project-nav container" aria-label="Project navigation">
+      <div class="pnav-inner">
+        {prevProject ? (
+          <a href={`/portfolio/${prevProject.slug}`} class="pnav-link pnav-prev">
+            <span class="pnav-dir label">← Previous</span>
+            <span class="pnav-title">{prevProject.data.title}</span>
+          </a>
+        ) : <div></div>}
+        <a href="/portfolio" class="pnav-all label">All Projects</a>
+        {nextProject ? (
+          <a href={`/portfolio/${nextProject.slug}`} class="pnav-link pnav-next">
+            <span class="pnav-dir label">Next →</span>
+            <span class="pnav-title">{nextProject.data.title}</span>
+          </a>
+        ) : <div></div>}
+      </div>
+    </nav>
+
+    <!-- Related -->
+    <RelatedProjects projects={allProjects} currentSlug={project.slug} />
+
+    <!-- CTA -->
+    <ContactCTA />
+  </article>
+
+  <Lightbox />
+</BaseLayout>
+
+<style>
+  .project-hero {
+    margin-bottom: var(--space-8);
+  }
+
+  .ph-cover {
+    width: 100%;
+    max-height: 85vh;
+    overflow: hidden;
+    background-color: var(--color-surface);
+  }
+
+  .cover-img {
+    width: 100%;
+    height: 100%;
+    max-height: 85vh;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  .ph-info {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-8);
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-4);
+    align-items: start;
+  }
+
+  .ph-category {
+    display: block;
+    color: var(--color-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .ph-title {
+    font-family: var(--font-heading);
+    font-size: var(--type-h1);
+    font-weight: 400;
+    line-height: 1.05;
+    margin-bottom: var(--space-3);
+  }
+
+  .ph-description {
+    color: var(--color-secondary);
+    max-width: 65ch;
+    line-height: 1.8;
+  }
+
+  .ph-credits {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .credits-label {
+    display: block;
+    margin-bottom: var(--space-2);
+    color: var(--color-muted);
+  }
+
+  .ph-credits p {
+    font-size: var(--type-small);
+    color: var(--color-muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .credit-role {
+    font-weight: 500;
+    color: var(--color-text);
+    margin-right: 0.5rem;
+  }
+
+  /* Prose / markdown body */
+  .project-body {
+    max-width: 65ch;
+    margin-inline: auto;
+    padding-block: var(--space-8);
+    color: var(--color-secondary);
+    line-height: 1.8;
+    font-style: italic;
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+  }
+
+  .project-body:empty { display: none; }
+
+  /* Project Nav */
+  .project-nav {
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-4);
+  }
+
+  .pnav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .pnav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    transition: color var(--transition-fast);
+  }
+
+  .pnav-prev { text-align: left; }
+  .pnav-next { text-align: right; }
+
+  .pnav-dir {
+    color: var(--color-muted);
+    font-size: var(--type-label);
+    letter-spacing: 0.08em;
+  }
+
+  .pnav-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: var(--color-text);
+    transition: color var(--transition-fast);
+  }
+
+  .pnav-link:hover .pnav-title { color: var(--color-secondary); }
+
+  .pnav-all {
+    color: var(--color-muted);
+    letter-spacing: 0.1em;
+    transition: color var(--transition-fast);
+    white-space: nowrap;
+  }
+
+  .pnav-all:hover { color: var(--color-text); }
+
+  @media (max-width: 767px) {
+    .ph-info { grid-template-columns: 1fr; }
+    .ph-credits { text-align: left; display: none; }
+    .pnav-all { display: none; }
+  }
+</style>
