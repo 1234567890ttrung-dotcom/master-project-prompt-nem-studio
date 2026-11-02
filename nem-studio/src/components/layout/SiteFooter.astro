@@ -1,0 +1,174 @@
+---
+import { siteConfig } from '../../lib/config';
+
+const nav = siteConfig.nav;
+const { social, contact } = siteConfig;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="wordmark" aria-label="NEM STUDIO — Home">NEM STUDIO</a>
+        <p class="footer-tagline">Beyond the frame.<br />Every image holds a story.</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <ul role="list">
+          {nav.map(({ label, href }) => (
+            <li>
+              <a href={href} class="footer-link">{label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <p class="footer-contact-label label">Connect</p>
+        {contact.email && (
+          <a href={`mailto:${contact.email}`} class="footer-link">{contact.email}</a>
+        )}
+        {contact.zalo && (
+          <a href={`https://zalo.me/${contact.zalo}`} class="footer-link" target="_blank" rel="noopener noreferrer">Zalo</a>
+        )}
+        <div class="social-links">
+          {social.instagram && (
+            <a href={social.instagram} class="social-link" target="_blank" rel="noopener noreferrer" aria-label="NEM STUDIO on Instagram">
+              Instagram
+            </a>
+          )}
+          {social.facebook && (
+            <a href={social.facebook} class="social-link" target="_blank" rel="noopener noreferrer" aria-label="NEM STUDIO on Facebook">
+              Facebook
+            </a>
+          )}
+          {social.tiktok && (
+            <a href={social.tiktok} class="social-link" target="_blank" rel="noopener noreferrer" aria-label="NEM STUDIO on TikTok">
+              TikTok
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <hr class="divider" />
+      <div class="footer-meta">
+        <p class="footer-copy">&copy; {year} NEM STUDIO. All rights reserved.</p>
+        <p class="footer-philosophy label">Light · Perspective · Emotion</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: var(--color-surface);
+    padding-block: var(--space-12) var(--space-6);
+    margin-top: var(--space-16);
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: var(--space-8);
+    margin-bottom: var(--space-8);
+  }
+
+  .wordmark {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    display: block;
+    margin-bottom: var(--space-3);
+  }
+
+  .footer-tagline {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
+
+  .footer-nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .footer-link {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    transition: color var(--transition-fast);
+  }
+  .footer-link:hover {
+    color: var(--color-text);
+  }
+
+  .footer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .footer-contact-label {
+    margin-bottom: var(--space-1);
+    color: var(--color-accent);
+  }
+
+  .social-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-top: var(--space-1);
+  }
+
+  .social-link {
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+    letter-spacing: 0.04em;
+    transition: color var(--transition-fast);
+  }
+  .social-link:hover {
+    color: var(--color-text);
+  }
+
+  .footer-bottom {
+    margin-top: var(--space-4);
+  }
+
+  .footer-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-4);
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .footer-copy {
+    font-size: var(--type-small);
+    color: var(--color-muted);
+  }
+
+  .footer-philosophy {
+    color: var(--color-accent);
+    letter-spacing: 0.12em;
+  }
+
+  @media (max-width: 767px) {
+    .footer-top {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+    .footer-meta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
