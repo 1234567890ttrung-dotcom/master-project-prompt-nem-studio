@@ -1,0 +1,130 @@
+---
+// ProjectGallery — renders a layout-aware image grid that connects to the Lightbox
+interface GalleryImage {
+  image: string;
+  alt: string;
+  layout?: 'full' | 'half' | 'third' | 'two-thirds';
+  caption?: string;
+}
+
+interface Props {
+  images: GalleryImage[];
+  projectTitle: string;
+}
+
+const { images, projectTitle } = Astro.props;
+---
+
+<section class="project-gallery" aria-label={`Photo gallery for ${projectTitle}`}>
+  <div class="gallery-grid">
+    {images.map((img, i) => (
+      <figure
+        class:list={['gallery-figure', `layout-${img.layout ?? 'full'}`]}
+        data-index={i}
+      >
+        <button
+          class="gallery-btn"
+          aria-label={`View full size: ${img.alt}`}
+          data-index={i}
+        >
+          <img
+            src={img.image}
+            alt={img.alt}
+            loading="lazy"
+            decoding="async"
+            class="gallery-img"
+          />
+        </button>
+        {img.caption && (
+          <figcaption class="gallery-caption label">{img.caption}</figcaption>
+        )}
+      </figure>
+    ))}
+  </div>
+</section>
+
+<script define:vars={{ images }}>
+  const lb = window.__lightbox;
+  if (lb) {
+    lb.setImages(images.map(img => ({ src: img.image, alt: img.alt })));
+  }
+
+  document.querySelectorAll('.gallery-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const index = parseInt(btn.getAttribute('data-index') ?? '0', 10);
+      window.__lightbox?.open(index);
+    });
+  });
+</script>
+
+<style>
+  .project-gallery {
+    margin-block: var(--space-8);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-3);
+    align-items: start;
+  }
+
+  .gallery-figure {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+  }
+
+  /* Layout classes */
+  .layout-full      { grid-column: span 12; }
+  .layout-half      { grid-column: span 6; }
+  .layout-third     { grid-column: span 4; }
+  .layout-two-thirds { grid-column: span 8; }
+
+  .gallery-btn {
+    display: block;
+    width: 100%;
+    cursor: zoom-in;
+    overflow: hidden;
+  }
+
+  .gallery-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 500ms var(--ease-out);
+  }
+
+  .gallery-btn:hover .gallery-img {
+    transform: scale(1.03);
+  }
+
+  .gallery-caption {
+    display: block;
+    padding: var(--space-1) var(--space-2);
+    color: var(--color-muted);
+    background-color: var(--color-surface);
+  }
+
+  /* Full-width images preserve portrait ratios naturally */
+  .layout-full .gallery-img {
+    max-height: 90vh;
+    object-fit: contain;
+    background-color: var(--color-surface);
+  }
+
+  @media (max-width: 767px) {
+    .layout-half      { grid-column: span 6; }
+    .layout-third     { grid-column: span 6; }
+    .layout-two-thirds { grid-column: span 12; }
+  }
+
+  @media (max-width: 479px) {
+    .gallery-grid { grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+    .layout-full      { grid-column: span 2; }
+    .layout-half      { grid-column: span 1; }
+    .layout-third     { grid-column: span 1; }
+    .layout-two-thirds { grid-column: span 2; }
+  }
+</style>

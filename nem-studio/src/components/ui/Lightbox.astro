@@ -1,0 +1,215 @@
+---
+// Lightbox component — full-screen image viewer
+// Uses vanilla JS island pattern
+---
+
+<div
+  id="lightbox"
+  class="lightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Image viewer"
+  hidden
+>
+  <div class="lightbox-backdrop"></div>
+  <div class="lightbox-content">
+    <button class="lightbox-close" aria-label="Close image viewer">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M2 2l16 16M18 2L2 18"/>
+      </svg>
+    </button>
+
+    <button class="lightbox-prev" aria-label="Previous image">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+
+    <div class="lightbox-img-wrap">
+      <img id="lightbox-img" src="" alt="" class="lightbox-img" />
+    </div>
+
+    <button class="lightbox-next" aria-label="Next image">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </button>
+
+    <div class="lightbox-counter" aria-live="polite">
+      <span id="lightbox-current">1</span> / <span id="lightbox-total">1</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox[hidden] { display: none; }
+
+  .lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(25, 23, 20, 0.95);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .lightbox-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: var(--space-4);
+  }
+
+  .lightbox-img-wrap {
+    max-width: min(90vw, 1200px);
+    max-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .lightbox-img.loaded { opacity: 1; }
+
+  .lightbox-close {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    color: rgba(247, 246, 242, 0.8);
+    padding: var(--space-1);
+    transition: color var(--transition-fast);
+    z-index: 2;
+  }
+
+  .lightbox-close:hover { color: #fff; }
+
+  .lightbox-prev,
+  .lightbox-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(247, 246, 242, 0.7);
+    padding: var(--space-2);
+    border-radius: 50%;
+    background: rgba(37, 35, 31, 0.3);
+    transition: all var(--transition-fast);
+    z-index: 2;
+  }
+
+  .lightbox-prev { left: var(--space-4); }
+  .lightbox-next { right: var(--space-4); }
+
+  .lightbox-prev:hover,
+  .lightbox-next:hover {
+    background: rgba(37, 35, 31, 0.6);
+    color: #fff;
+  }
+
+  .lightbox-counter {
+    position: absolute;
+    bottom: var(--space-4);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: var(--type-small);
+    color: rgba(247, 246, 242, 0.6);
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 639px) {
+    .lightbox-prev { left: var(--space-2); }
+    .lightbox-next { right: var(--space-2); }
+    .lightbox-img-wrap { max-width: 95vw; }
+  }
+</style>
+
+<script>
+  interface LightboxState {
+    images: { src: string; alt: string }[];
+    current: number;
+  }
+
+  const state: LightboxState = { images: [], current: 0 };
+
+  const lb = document.getElementById('lightbox')!;
+  const lbImg = document.getElementById('lightbox-img') as HTMLImageElement;
+  const lbCurrent = document.getElementById('lightbox-current')!;
+  const lbTotal = document.getElementById('lightbox-total')!;
+  const closeBtn = lb?.querySelector('.lightbox-close') as HTMLButtonElement;
+  const prevBtn = lb?.querySelector('.lightbox-prev') as HTMLButtonElement;
+  const nextBtn = lb?.querySelector('.lightbox-next') as HTMLButtonElement;
+  const backdrop = lb?.querySelector('.lightbox-backdrop') as HTMLElement;
+
+  let previousFocus: HTMLElement | null = null;
+
+  function open(index: number) {
+    state.current = index;
+    previousFocus = document.activeElement as HTMLElement;
+    lb.removeAttribute('hidden');
+    document.body.style.overflow = 'hidden';
+    showImage(index);
+    closeBtn?.focus();
+  }
+
+  function close() {
+    lb.setAttribute('hidden', '');
+    document.body.style.overflow = '';
+    previousFocus?.focus();
+  }
+
+  function showImage(index: number) {
+    lbImg.classList.remove('loaded');
+    const { src, alt } = state.images[index];
+    lbImg.src = src;
+    lbImg.alt = alt;
+    lbImg.onload = () => lbImg.classList.add('loaded');
+    lbCurrent.textContent = String(index + 1);
+    lbTotal.textContent = String(state.images.length);
+    prevBtn.style.display = state.images.length <= 1 ? 'none' : '';
+    nextBtn.style.display = state.images.length <= 1 ? 'none' : '';
+  }
+
+  function next() {
+    state.current = (state.current + 1) % state.images.length;
+    showImage(state.current);
+  }
+
+  function prev() {
+    state.current = (state.current - 1 + state.images.length) % state.images.length;
+    showImage(state.current);
+  }
+
+  closeBtn?.addEventListener('click', close);
+  backdrop?.addEventListener('click', close);
+  nextBtn?.addEventListener('click', next);
+  prevBtn?.addEventListener('click', prev);
+
+  document.addEventListener('keydown', (e) => {
+    if (lb.hasAttribute('hidden')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+
+  // Public API — called by ProjectGallery
+  (window as any).__lightbox = { open, setImages: (imgs: { src: string; alt: string }[]) => { state.images = imgs; lbTotal.textContent = String(imgs.length); } };
+</script>
