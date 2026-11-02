@@ -1,0 +1,318 @@
+/* ============================================
+   NEM STUDIO — Global Styles
+   Art Direction: Light Editorial
+   ============================================ */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500&display=swap');
+
+/* ─── Design Tokens ─────────────────────────── */
+:root {
+  /* Colors */
+  --color-background: #F7F6F2;
+  --color-surface: #EAE7E0;
+  --color-accent: #B8AA98;
+  --color-secondary: #62594F;
+  --color-text: #25231F;
+  --color-muted: #89837A;
+  --color-border: #DDD9D1;
+  --color-white: #FFFFFF;
+
+  /* Typography */
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Type Scale */
+  --type-display: clamp(3.5rem, 8vw, 6rem);
+  --type-h1: clamp(2.5rem, 5vw, 4rem);
+  --type-h2: clamp(1.875rem, 3.5vw, 3rem);
+  --type-h3: clamp(1.5rem, 2.5vw, 2rem);
+  --type-h4: clamp(1.25rem, 2vw, 1.5rem);
+  --type-body: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  --type-small: clamp(0.75rem, 1vw, 0.8125rem);
+  --type-label: 0.75rem;
+
+  /* Spacing */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-6: 3rem;
+  --space-8: 4rem;
+  --space-12: 6rem;
+  --space-16: 8rem;
+  --space-24: 12rem;
+
+  /* Layout */
+  --max-width: 1320px;
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --header-height: 72px;
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 200ms var(--ease-out);
+  --transition-base: 300ms var(--ease-out);
+  --transition-slow: 500ms var(--ease-out);
+
+  /* Borders */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+}
+
+/* ─── Reset ─────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img, video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font: inherit;
+}
+
+/* ─── Typography ─────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+h1 { font-size: var(--type-h1); }
+h2 { font-size: var(--type-h2); }
+h3 { font-size: var(--type-h3); }
+h4 { font-size: var(--type-h4); }
+
+p {
+  font-size: var(--type-body);
+  line-height: 1.75;
+  color: var(--color-text);
+}
+
+/* ─── Layout Utilities ───────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--space-12);
+}
+
+.section--sm {
+  padding-block: var(--space-8);
+}
+
+.section--lg {
+  padding-block: var(--space-16);
+}
+
+/* ─── Utility Classes ────────────────────────── */
+.label {
+  font-family: var(--font-body);
+  font-size: var(--type-label);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-secondary {
+  color: var(--color-secondary);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─── Skip Link ──────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-2);
+  z-index: 9999;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-text);
+  color: var(--color-background);
+  font-size: var(--type-small);
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  transition: top var(--transition-fast);
+}
+.skip-link:focus {
+  top: var(--space-2);
+}
+
+/* ─── Focus Styles ───────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Divider ────────────────────────────────── */
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-border);
+  border: none;
+}
+
+/* ─── Buttons ────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.875rem 2rem;
+  font-family: var(--font-body);
+  font-size: var(--type-small);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn--primary {
+  background-color: var(--color-text);
+  color: var(--color-background);
+  border: 1px solid var(--color-text);
+}
+.btn--primary:hover {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+.btn--outline {
+  background-color: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+.btn--outline:hover {
+  border-color: var(--color-text);
+}
+
+.btn--ghost {
+  background: none;
+  border: none;
+  padding-inline: 0;
+  color: var(--color-text);
+  gap: 0.5rem;
+}
+.btn--ghost:hover {
+  color: var(--color-secondary);
+}
+.btn--ghost::after {
+  content: '→';
+  display: inline-block;
+  transition: transform var(--transition-fast);
+}
+.btn--ghost:hover::after {
+  transform: translateX(4px);
+}
+
+/* ─── Scroll Reveal Animation ───────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--transition-slow), transform var(--transition-slow);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Image Aspect Ratios ───────────────────── */
+.aspect-portrait  { aspect-ratio: 3 / 4; }
+.aspect-landscape { aspect-ratio: 4 / 3; }
+.aspect-square    { aspect-ratio: 1 / 1; }
+.aspect-wide      { aspect-ratio: 16 / 9; }
+.aspect-cinematic { aspect-ratio: 21 / 9; }
+
+.img-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ─── Scrollbar ─────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-background); }
+::-webkit-scrollbar-thumb { background: var(--color-accent); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-secondary); }
+
+/* ─── Selection ─────────────────────────────── */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-text);
+}
